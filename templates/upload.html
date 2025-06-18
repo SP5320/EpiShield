@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload Video</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            transition: background-color 0.5s;
+        }
+        .container {
+            width: 80%;
+            max-width: 600px;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            animation: slideIn 0.5s ease-out;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            transition: color 0.3s;
+        }
+        input[type="file"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            transition: box-shadow 0.3s, border-color 0.3s;
+        }
+        input[type="file"]:hover,
+        select:hover {
+            box-shadow: 0 0 8px rgba(0, 0, 255, 0.5);
+        }
+        button {
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 5px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #004494;
+        }
+        button[disabled] {
+            background-color: #cccccc;
+            color: #666;
+            cursor: not-allowed;
+            border: 1px solid #999;
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        /* General table styles */
+        .table-style {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 18px;
+            min-width: 400px;
+            border-radius: 5px 5px 0 0;
+            overflow: hidden;
+        }
+
+        /* Table headers */
+        .table-style thead th {
+            background-color: #0056b3;
+            color: white;
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        /* Table body */
+        .table-style tbody td {
+            border-bottom: 1px solid #dddddd;
+            padding: 12px 15px;
+            color: #333;
+        }
+
+        /* Table rows */
+        .table-style tbody tr:nth-of-type(even) {
+            background-color: #f3f3f3;
+        }
+
+        .table-style tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Responsive adjustments */
+        @media screen and (max-width: 600px) {
+            .table-style thead {
+                display: none;
+            }
+            .table-style tbody td {
+                display: block;
+                text-align: right;
+            }
+            .table-style tbody td::before {
+                content: attr(data-label);
+                float: left;
+                font-weight: bold;
+                color: #009879;
+            }
+            .table-style tbody tr {
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>EpiShield</h1>
+        <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="file">Upload File</label>
+                <input type="file" id="file" name="file" accept="video/*" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="mode">Processing mode:</label>
+                <select name="mode" id="mode">
+                    <option value="grayscale">Convert to Grayscale</option>
+                    <option value="skip">Skip Content</option>
+                </select>
+            </div>
+
+            <button type="submit">Upload Video</button>
+            <a href="/download-video/{{filename}}" download>
+                <button type="button" {{ 'disabled' if not download else '' }}>Download Video</button>
+            </a>
+        </form>
+    </div>
+        {% if table %}
+        <div class="container">
+        <h1>Trigger Timestamps</h1>
+        {{ table|safe }}
+    </div>
+        {% endif %}
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', function(event) {
+            var fileInput = document.getElementById('file');
+            if (fileInput.files.length === 0) {
+                alert('Please select a video file to upload.');
+                event.preventDefault(); // Prevent form from submitting without a file
+            }
+        });
+        window.onload = function() {
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    alert("{{ messages[0] }}");  // Show the first message via alert
+                {% endif %}
+            {% endwith %}
+        }
+    </script>
+</body>
+</html>
