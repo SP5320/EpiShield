@@ -25,7 +25,7 @@ pip install -r requirements.txt
 ### Setting Up
 **Clone the repository**
 ```bash
-git clone https://github.iu.edu/cs-b657-sp2024/cs-b657-sp2024-dasakas-kparekh-ks134-pawars-finalproject.git
+git clone https://github.com/SP5320/EpiShield.git
 ```
 
 ### Configure the App
